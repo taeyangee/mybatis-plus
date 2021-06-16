@@ -41,6 +41,9 @@ import static java.util.stream.Collectors.joining;
 
 /**
  * 查询条件封装
+ * @param <T> 实体类
+ * @param <R> 实体类中的某个字段
+ * @param <Children> 限制了只能同构的是 AbstractWrapper<T, R, Children>
  *
  * @author hubin miemie HCL
  * @since 2017-05-26

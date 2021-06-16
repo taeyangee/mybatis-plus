@@ -35,6 +35,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 /**
  * Mybatis 全局缓存
  *
+ * 相比mybatis多出了以下组件：
+ * DbConfig、ISqlInjector、MetaObjectHandler、IdentifierGenerator
  * @author Caratacus
  * @since 2016-12-06
  */
@@ -71,6 +73,7 @@ public class GlobalConfig implements Serializable {
      * 数据库相关配置
      */
     private DbConfig dbConfig;
+
     /**
      * SQL注入器
      */

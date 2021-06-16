@@ -20,6 +20,8 @@ import org.apache.ibatis.builder.annotation.MethodResolver;
 /**
  * 继承 {@link MethodResolver}
  *
+ * - 做了 MybatisMapperAnnotationBuilder增强
+ *
  * @author miemie
  * @since 2019-01-05
  */

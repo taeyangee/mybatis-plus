@@ -42,9 +42,9 @@ public class Insert extends AbstractMethod {
         KeyGenerator keyGenerator = new NoKeyGenerator();
         SqlMethod sqlMethod = SqlMethod.INSERT_ONE;
         String columnScript = SqlScriptUtils.convertTrim(tableInfo.getAllInsertSqlColumnMaybeIf(null),
-            LEFT_BRACKET, RIGHT_BRACKET, null, COMMA);
+            LEFT_BRACKET, RIGHT_BRACKET, null, COMMA);// 根据tableInfo生成column信息： <trim prefix="(" suffix=")" suffixOverrides=",">*/id/.<//trim>
         String valuesScript = SqlScriptUtils.convertTrim(tableInfo.getAllInsertSqlPropertyMaybeIf(null),
-            LEFT_BRACKET, RIGHT_BRACKET, null, COMMA);
+            LEFT_BRACKET, RIGHT_BRACKET, null, COMMA);// 根据tableInfo生成value占位符 ：<trim prefix="(" suffix=")" suffixOverrides=",">#{id},</trim>
         String keyProperty = null;
         String keyColumn = null;
         // 表包含主键处理逻辑,如果不包含主键当普通字段处理
@@ -62,8 +62,21 @@ public class Insert extends AbstractMethod {
                 }
             }
         }
+        //format拼接：
+       /*
+        * <script>
+            INSERT INTO a <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+
+            </trim> VALUES <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{id},
+
+            </trim>
+            </script>
+        * */
         String sql = String.format(sqlMethod.getSql(), tableInfo.getTableName(), columnScript, valuesScript);
-        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass);
+        /* 生成sqlSource -> MappedStatement 并注册到config中*/
+        SqlSource sqlSource = languageDriver.createSqlSource(configuration, sql, modelClass); // 生成SQ
         return this.addInsertMappedStatement(mapperClass, modelClass, getMethod(sqlMethod), sqlSource, keyGenerator, keyProperty, keyColumn);
     }
 }

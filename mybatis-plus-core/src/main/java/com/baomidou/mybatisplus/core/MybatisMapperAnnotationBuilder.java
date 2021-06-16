@@ -63,6 +63,8 @@ import java.util.stream.Stream;
  * 只重写了 {@link MapperAnnotationBuilder#parse} 和 #getReturnType
  * 没有XML配置文件注入基础CRUD方法
  * </p>
+ * - MybatisMapperAnnotationBuilder功能：根据方法上的注解， 生成对应的MapperStatment
+ * - MapperAnnotationBuilder：有mybatis提供，负责解析 Mapper 接口上的注解
  *
  * @author Caratacus
  * @since 2017-01-04
@@ -75,7 +77,7 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
         .collect(Collectors.toSet());
 
     private final Configuration configuration;
-    private final MapperBuilderAssistant assistant;
+    private final MapperBuilderAssistant assistant; //每个Mapper实例，都有一位assist
     private final Class<?> type;
 
     public MybatisMapperAnnotationBuilder(Configuration configuration, Class<?> type) {
@@ -103,12 +105,12 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
                 }
                 if (getAnnotationWrapper(method, false, Select.class, SelectProvider.class).isPresent()
                     && method.getAnnotation(ResultMap.class) == null) {
-                    parseResultMap(method);
+                    parseResultMap(method); //select方法、并且没有ResultMap注解，才需要分析ResultMap
                 }
                 try {
                     // TODO 加入 注解过滤缓存
                     InterceptorIgnoreHelper.initSqlParserInfoCache(cache, mapperName, method);
-                    parseStatement(method);
+                    parseStatement(method); // 解析mapper接口中的自定义方法（带注解的方法）
                 } catch (IncompleteElementException e) {
                     // TODO 使用 MybatisMethodResolver 而不是 MethodResolver
                     configuration.addIncompleteMethod(new MybatisMethodResolver(this, method));
@@ -118,7 +120,7 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
             try {
                 // https://github.com/baomidou/mybatis-plus/issues/3038
                 if (GlobalConfigUtils.isSupperMapperChildren(configuration, type)) {
-                    parserInjector();
+                    parserInjector(); //解析mapper接口中的默认方法（BaseMapper定义的那些）
                 }
             } catch (IncompleteElementException e) {
                 configuration.addIncompleteMethod(new InjectorResolver(this));
@@ -289,7 +291,7 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
     void parseStatement(Method method) {
         final Class<?> parameterTypeClass = getParameterType(method);
         final LanguageDriver languageDriver = getLanguageDriver(method);
-
+        //找到需要处理的注解， 生成mappedStatement()
         getAnnotationWrapper(method, true, statementAnnotationTypes).ifPresent(statementAnnotation -> {
             final SqlSource sqlSource = buildSqlSource(statementAnnotation.getAnnotation(), parameterTypeClass, languageDriver, method);
             final SqlCommandType sqlCommandType = statementAnnotation.getSqlCommandType();
@@ -347,7 +349,7 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
                     resultMapId = generateResultMapName(method);
                 }
             }
-
+            // 添加mappedStatementId
             assistant.addMappedStatement(
                 mappedStatementId,
                 sqlSource,
@@ -644,7 +646,7 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
                                                                    Class<? extends Annotation>... targetTypes) {
         return getAnnotationWrapper(method, errorIfNoMatch, Arrays.asList(targetTypes));
     }
-
+    // 寻找需要处理的注解，范围限定在targetTypes，生成AnnotationWrapper（Annotation容器）
     private Optional<AnnotationWrapper> getAnnotationWrapper(Method method, boolean errorIfNoMatch,
                                                              Collection<Class<? extends Annotation>> targetTypes) {
         String databaseId = configuration.getDatabaseId();
@@ -673,7 +675,7 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
     }
 
     @Getter
-    private class AnnotationWrapper {
+    private class AnnotationWrapper { // mapper#xxx func的注解容器
         private final Annotation annotation;
         private final String databaseId;
         private final SqlCommandType sqlCommandType;

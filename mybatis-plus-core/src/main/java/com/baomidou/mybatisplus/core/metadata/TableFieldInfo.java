@@ -57,6 +57,7 @@ public class TableFieldInfo implements Constants {
     private final String property;
     /**
      * 属性表达式#{property}, 可以指定jdbcType, typeHandler等
+     *
      */
     private final String el;
     /**

@@ -44,16 +44,17 @@ public abstract class AbstractSqlInjector implements ISqlInjector {
         if (modelClass != null) {
             String className = mapperClass.toString();
             Set<String> mapperRegistryCache = GlobalConfigUtils.getMapperRegistryCache(builderAssistant.getConfiguration());
-            if (!mapperRegistryCache.contains(className)) {
-                List<AbstractMethod> methodList = this.getMethodList(mapperClass);
+            if (!mapperRegistryCache.contains(className)) {//还没注入过，没有mapperRegistry中没有缓存
+                List<AbstractMethod> methodList = this.getMethodList(mapperClass); // AbstractMethod
                 if (CollectionUtils.isNotEmpty(methodList)) {
-                    TableInfo tableInfo = TableInfoHelper.initTableInfo(builderAssistant, modelClass);
-                    // 循环注入自定义方法
+                    TableInfo tableInfo = TableInfoHelper.initTableInfo(builderAssistant, modelClass); //解析出数据库表反射信息
+                    // 循环注入自定义方法, 每个AbstractMethod子类注入一个MappedStatement
+                    // 每个AbstractMethod子类对应BaseMappery一个方法， 为该方法生成MappedStatement。（详见AbstractMethod子类Insert）
                     methodList.forEach(m -> m.inject(builderAssistant, mapperClass, modelClass, tableInfo));
                 } else {
                     logger.debug(mapperClass.toString() + ", No effective injection method was found.");
                 }
-                mapperRegistryCache.add(className);
+                mapperRegistryCache.add(className); //缓存，避免重复分析
             }
         }
     }

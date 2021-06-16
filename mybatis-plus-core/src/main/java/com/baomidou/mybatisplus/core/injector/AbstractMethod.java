@@ -44,7 +44,7 @@ import static java.util.stream.Collectors.joining;
 
 /**
  * 抽象的注入方法类
- *
+ * - 模板类， 各个子类实现injectMappedStatement方法，完成MapperStatment初始化
  * @author hubin
  * @since 2018-04-06
  */
