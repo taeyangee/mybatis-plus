@@ -21,6 +21,10 @@ import java.io.Serializable;
 /**
  * SQL 片段接口
  *
+ * 思路：一个sql可以拆解为若干SQL片段，是整个conditions包的核心抽象
+ * -最终输出的完整查询条件， 是ISqlSegment
+ * -查询条件各种拼接、嵌套、生成，都是在管理对应的ISqlSegment
+ * -围绕ISqlSegment接口， AbstractWrapper/AbstractISegmentList采用组合模型、解析器模型完成了复杂条件的组装和sql语句输出
  * @author hubin miemie HCL
  * @since 2018-05-28
  */

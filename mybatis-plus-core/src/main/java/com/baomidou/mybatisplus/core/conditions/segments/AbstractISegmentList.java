@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * SQL 片段集合 处理的抽象类
- *
+ * 实现了ISqlSegment接口，同时也是 ISqlSegment容器
  * @author miemie
  * @since 2018-06-27
  */
@@ -32,11 +32,10 @@ import java.util.List;
 public abstract class AbstractISegmentList extends ArrayList<ISqlSegment> implements ISqlSegment, StringPool {
 
     /**
-     * 最后一个值
+     * 最后一个值：sql seg的尾部比较特别，需要容错处理（比如NormalSegmentList），所以单独索引
      */
     ISqlSegment lastValue = null;
     /**
-     * 刷新 lastValue
      */
     boolean flushLastValue = false;
     /**
@@ -57,8 +56,9 @@ public abstract class AbstractISegmentList extends ArrayList<ISqlSegment> implem
     @Override
     public boolean addAll(Collection<? extends ISqlSegment> c) {
         List<ISqlSegment> list = new ArrayList<>(c);
+
         boolean goon = transformList(list, list.get(0), list.get(list.size() - 1));
-        if (goon) {
+        if (goon) { /* 如果有新的seg完成转换，被加入到当前list，就取消缓存， 更新lastvalue*/
             cacheSqlSegment = false;
             if (flushLastValue) {
                 this.flushLastValue(list);
@@ -74,7 +74,7 @@ public abstract class AbstractISegmentList extends ArrayList<ISqlSegment> implem
      * @param list         传入进来的 ISqlSegment 集合
      * @param firstSegment ISqlSegment 集合里第一个值
      * @param lastSegment  ISqlSegment 集合里最后一个值
-     * @return true 是否继续向下执行; false 不再向下执行
+     * @return true 是否继续向下执行; false 不再向下执行 ==》实际上是想标识：有没新的seg进入容器
      */
     protected abstract boolean transformList(List<ISqlSegment> list, ISqlSegment firstSegment, ISqlSegment lastSegment);
 
@@ -100,12 +100,13 @@ public abstract class AbstractISegmentList extends ArrayList<ISqlSegment> implem
             return sqlSegment;
         }
         cacheSqlSegment = true;
+        /* 委托子类完成Seg的翻译结果 */
         sqlSegment = childrenSqlSegment();
         return sqlSegment;
     }
 
     /**
-     * 只有该类进行过 addAll 操作,才会触发这个方法
+     * 只有该类进行过 addAll 操作,才会触发这个方法（没有addAll，会被cacheSqlSegment短路）
      * <p>
      * 方法内可以放心进行操作
      *

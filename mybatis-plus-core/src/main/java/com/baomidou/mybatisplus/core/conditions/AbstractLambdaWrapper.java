@@ -32,6 +32,7 @@ import static java.util.stream.Collectors.joining;
  * Lambda 语法使用 Wrapper
  * <p>统一处理解析 lambda 获取 column</p>
  *
+ * - 复写了  columnsToString：通过SFunc提出column string， 主要是委托LambdaUtils对jdk lambda进行分析
  * @author hubin miemie HCL
  * @since 2017-05-26
  */
@@ -39,8 +40,8 @@ import static java.util.stream.Collectors.joining;
 public abstract class AbstractLambdaWrapper<T, Children extends AbstractLambdaWrapper<T, Children>>
         extends AbstractWrapper<T, SFunction<T, ?>, Children> {
 
-    private Map<String, ColumnCache> columnMap = null;
-    private boolean initColumnMap = false;
+    private Map<String, ColumnCache> columnMap = null; /*保存了 T的各个字段的ColumnCache*/
+    private boolean initColumnMap = false; /*避免重复调用LambdaUtils做columnMap解析*/
 
     @SuppressWarnings("unchecked")
     @Override
@@ -72,7 +73,7 @@ public abstract class AbstractLambdaWrapper<T, Children extends AbstractLambdaWr
      * @throws com.baomidou.mybatisplus.core.exceptions.MybatisPlusException 获取不到列信息时抛出异常
      */
     protected ColumnCache getColumnCache(SFunction<T, ?> column) {
-        LambdaMeta meta = LambdaUtils.extract(column);
+        LambdaMeta meta = LambdaUtils.extract(column); /*LambdaUtils涉及jdk lamba的姿势， LambdaMeta则是mbp为了隔离jdk labma*/
         String fieldName = PropertyNamer.methodToProperty(meta.getImplMethodName());
         tryInitCache(meta.getInstantiatedClass());
         return getColumnCache(fieldName, meta.getInstantiatedClass());

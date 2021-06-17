@@ -40,8 +40,7 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * <p>
- * 实体类反射表辅助类
- * 就是帮忙管理一下各个Entity的TableInfo
+ * 实体类反射表辅助类：就是帮忙管理一下各个Entity的TableInfo
  * </p>
  *
  * @author hubin sjy

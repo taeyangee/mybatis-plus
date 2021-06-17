@@ -15,5 +15,10 @@
  */
 /**
  * SQL 片段相关类
+ *
+ * - 实现了各种ISqlSegment
+ * - 各种ISqlSegment之间使用了组合模式进行整合？
+ * - MergeSegments整合了 GroupBySegmentList、HavingSegmentList、NormalSegmentList、OrderBySegmentList
+ * -
  */
 package com.baomidou.mybatisplus.core.conditions.segments;

@@ -32,6 +32,7 @@ package com.baomidou.mybatisplus.core.toolkit;
  * <li>Strings computed by constant expressions are computed at compile time and then treated as if they were literals.</li>
  * <li>Strings computed by concatenation at run time are newly created and therefore distinct.</li>
  * </ul>
+ * 因为编译器内联带来了性能优化？
  */
 public interface StringPool {
 

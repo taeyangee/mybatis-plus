@@ -30,8 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import static java.util.Locale.ENGLISH;
 
 /**
- * Lambda 解析工具类
  *
+ * Lambda 解析工具类
+ * jdk lambda原理： https://cloud.tencent.com/developer/article/1526621
  * @author HCL, MieMie
  * @since 2018-05-10
  */
@@ -39,6 +40,7 @@ public final class LambdaUtils {
 
     /**
      * 字段映射
+     * 形成一个双重嵌套map: <Entity类名:<Entity字段名:ColumnCache(字段对应sql表中的column， 字段对应sql表中的column的select语句 )>>
      */
     private static final Map<String, Map<String, ColumnCache>> COLUMN_CACHE_MAP = new ConcurrentHashMap<>();
 
@@ -51,10 +53,10 @@ public final class LambdaUtils {
      */
     public static <T> LambdaMeta extract(SFunction<T, ?> func) {
         try {
-            Method method = func.getClass().getDeclaredMethod("writeReplace");
-            return new SerializedLambdaMeta((SerializedLambda) ReflectionKit.setAccessible(method).invoke(func));
+            Method method = func.getClass().getDeclaredMethod("writeReplace"); /* writeReplace 是 com.baomidou.mybatisplus.core.conditions.QueryWrapperTest$$Lambda$300的方法*/
+            return new SerializedLambdaMeta((SerializedLambda) ReflectionKit.setAccessible(method).invoke(func));   /*调用writeReplace方法，参数是func，由jdk完成SerializedLambda解析， SerializedLambdaMeta则委托SerializedLambda实现LambdaMeta接口*/
         } catch (NoSuchMethodException e) {
-            if (func instanceof Proxy) return new ProxyLambdaMeta((Proxy) func);
+            if (func instanceof Proxy) return new ProxyLambdaMeta((Proxy) func); /* TODO:不是lambda就可能是proxy？*/
             String message = "Cannot find method writeReplace, please make sure that the lambda composite class is currently passed in";
             throw new MybatisPlusException(message);
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -94,7 +96,7 @@ public final class LambdaUtils {
     private static Map<String, ColumnCache> createColumnCacheMap(TableInfo info) {
         Map<String, ColumnCache> map;
 
-        if (info.havePK()) {
+        if (info.havePK()) { /*表格有主键时， 多插入一行关于主键的ColumnCache*/
             map = CollectionUtils.newHashMapWithExpectedSize(info.getFieldList().size() + 1);
             map.put(formatKey(info.getKeyProperty()), new ColumnCache(info.getKeyColumn(), info.getKeySqlSelect()));
         } else {
@@ -109,13 +111,12 @@ public final class LambdaUtils {
 
     /**
      * 获取实体对应字段 MAP
-     *
      * @param clazz 实体类
      * @return 缓存 map
      */
     public static Map<String, ColumnCache> getColumnMap(Class<?> clazz) {
         return CollectionUtils.computeIfAbsent(COLUMN_CACHE_MAP, clazz.getName(), key -> {
-            TableInfo info = TableInfoHelper.getTableInfo(clazz);
+            TableInfo info = TableInfoHelper.getTableInfo(clazz); /*拉取TableInfo*/
             return info == null ? null : createColumnCacheMap(info);
         });
     }

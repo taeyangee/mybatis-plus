@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 /**
- * Wrapper 接口
+ * Wrapper接口
+ *
+ * 定义了各种查询条件接口，包括以下
+ * - Func： sql中关于 函数 的抽象
+ * - Compare：sql中关于 比较语法 的抽象
+ * - Nested：sql中关于 嵌套语法 的抽象
+ * - Join： sql中关于 拼接 的抽象
+ *
+ * vs segments : 更加接近用户层
  */
 package com.baomidou.mybatisplus.core.conditions.interfaces;

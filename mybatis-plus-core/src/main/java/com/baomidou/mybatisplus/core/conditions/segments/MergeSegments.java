@@ -39,23 +39,26 @@ public class MergeSegments implements ISqlSegment {
     private final OrderBySegmentList orderBy = new OrderBySegmentList();
 
     @Getter(AccessLevel.NONE)
-    private String sqlSegment = StringPool.EMPTY;
+    private String sqlSegment = StringPool.EMPTY; /* 保存拼接完成的语句*/
     @Getter(AccessLevel.NONE)
-    private boolean cacheSqlSegment = true;
+    private boolean cacheSqlSegment = true; /* 缓存标志位：防止重复做拼接，提升性能*/
 
     public void add(ISqlSegment... iSqlSegments) {
         List<ISqlSegment> list = Arrays.asList(iSqlSegments);
         ISqlSegment firstSqlSegment = list.get(0);
+        /* 所有ORDER_BY子句被放入OrderBySegmentList做合并， 内部解决多个order子句的拼接*/
         if (MatchSegment.ORDER_BY.match(firstSqlSegment)) {
             orderBy.addAll(list);
         } else if (MatchSegment.GROUP_BY.match(firstSqlSegment)) {
+            /*同上， 用于合并多个groupBy子句 */
             groupBy.addAll(list);
         } else if (MatchSegment.HAVING.match(firstSqlSegment)) {
+            /*同上， 用于合并多个having子句 */
             having.addAll(list);
         } else {
             normal.addAll(list);
         }
-        cacheSqlSegment = false;
+        cacheSqlSegment = false; /*有新的片段加入， cache取消*/
     }
 
     @Override

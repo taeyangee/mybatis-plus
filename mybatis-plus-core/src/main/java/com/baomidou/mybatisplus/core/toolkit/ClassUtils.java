@@ -172,7 +172,7 @@ public final class ClassUtils {
             throw ExceptionUtils.mpe("找不到指定的class！请仅在明确确定会有 class 的时候，调用该方法", e);
         }
     }
-
+    /*尝试在多个classLoader中查找class*/
     private static Class<?> loadClass(String className, ClassLoader[] classLoaders) throws ClassNotFoundException {
         for (ClassLoader classLoader : classLoaders) {
             if (classLoader != null) {

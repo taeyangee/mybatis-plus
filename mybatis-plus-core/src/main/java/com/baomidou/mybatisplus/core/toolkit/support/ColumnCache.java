@@ -21,6 +21,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
+  数据示例： ColumnCache(column=username, columnSelect=username AS name, mapping=null)
  * @author miemie
  * @since 2018-12-30
  */
@@ -31,11 +32,11 @@ public class ColumnCache implements Serializable {
     private static final long serialVersionUID = -4586291538088403456L;
 
     /**
-     * 使用 column
+     * 使用 column  : java中的字段名称
      */
     private String column;
     /**
-     * 查询 column
+     * 查询 column ： 改字段在sql中对应的select语句片段
      */
     private String columnSelect;
     /**

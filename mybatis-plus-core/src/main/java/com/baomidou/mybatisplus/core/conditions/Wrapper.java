@@ -26,7 +26,8 @@ import java.util.Objects;
 
 /**
  * 条件构造抽象类
- *
+ * -定义对MergeSegments的判定方法，要求子类要提供MergeSegments
+ * -定义 getSqlXXX，更像是给测试用的
  * @author hubin
  * @since 2018-05-25
  */
@@ -57,7 +58,7 @@ public abstract class Wrapper<T> implements ISqlSegment {
     }
 
     /**
-     * 获取 MergeSegments
+     * 获取 MergeSegments: 各种Seg整合在一起形成了MergeSegments
      */
     public abstract MergeSegments getExpression();
 
@@ -165,11 +166,14 @@ public abstract class Wrapper<T> implements ISqlSegment {
 
     /**
      * 获取格式化后的执行sql
-     *
+     * 比如： (xxx = ? AND (andx = ? AND ande <= ?) AND xxx <> ?)
      * @return sql
      * @since 3.3.1
      */
     public String getTargetSql() {
+        /*
+        * 比如 (xxx = #{ew.paramNameValuePairs.MPGENVAL1} AND (andx = #{ew.paramNameValuePairs.MPGENVAL2} AND ande <= #{ew.paramNameValuePairs.MPGENVAL3}) AND xxx <> #{ew.paramNameValuePairs.MPGENVAL4})
+        * */
         return getSqlSegment().replaceAll("#\\{.+?}", "?");
     }
 

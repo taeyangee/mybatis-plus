@@ -16,5 +16,5 @@
 - 功能实现：MybatisMapperAnnotationBuilder根据注解完成了BaseMapper中自定义方法到MapperStatment的绑定
 - 代码路径：MybatisMapperAnnotationBuilder#parse -> #parseStatement
 ## BaseMapper接口中的默认方法
-- 功能实现：MybatisMapperAnnotationBuilder委托SqlInjector委托#各种AbstractMethod子类，完成了默认方法到MapperStatment的绑定
+- 功能实现：MybatisMapperAnnotationBuilder-> SqlInjector-> 各种AbstractMethod子类，完成了默认方法到MapperStatment的绑定
 - 细节：每个AbstractMethod子类 对应 BaseMapper中的一个方法

@@ -29,7 +29,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 /**
- * Entity 对象封装操作类
+ * 基于 plain text 定位column的wrapper
+ *
+ * - 继承AbstractWrapper，里头实现了sql查询条件的构造与解析
+ * - 实现Query接口，里头定义了sql select语句的构造方法
  *
  * @author hubin miemie HCL
  * @since 2018-05-25
@@ -40,6 +43,7 @@ public class QueryWrapper<T> extends AbstractWrapper<T, String, QueryWrapper<T>>
 
     /**
      * 查询字段
+     * - Query接口的各种select语句构造方法， 都被记录在这个字段上
      */
     private final SharedString sqlSelect = new SharedString();
 

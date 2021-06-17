@@ -42,9 +42,11 @@ public class NormalSegmentList extends AbstractISegmentList {
     @Override
     protected boolean transformList(List<ISqlSegment> list, ISqlSegment firstSegment, ISqlSegment lastSegment) {
         if (list.size() == 1) {
-            /* 只有 and() 以及 or() 以及 not() 会进入 */
-            if (!MatchSegment.NOT.match(firstSegment)) {
-                //不是 not
+            /* 只有 and() 以及 or() 以及 not() 会进入
+                ==》 代码上AbstractWrapper#or、and、not会单独调用一次MergeSegments#add
+                ==》 紧接着调用AbstractWrapper#addNestedCondition
+            */
+            if (!MatchSegment.NOT.match(firstSegment)) {  //不是 not
                 if (isEmpty()) {
                     //sqlSegment是 and 或者 or 并且在第一位,不继续执行
                     return false;
@@ -68,9 +70,11 @@ public class NormalSegmentList extends AbstractISegmentList {
             }
         } else {
             if (MatchSegment.APPLY.match(firstSegment)) {
+                /*  APPLY只有标识意义，删掉 */
                 list.remove(0);
             }
             if (!MatchSegment.AND_OR.match(lastValue) && !isEmpty()) {
+                /* 尾部添加 and， 为下一个sqlSeg列表做准备*/
                 add(SqlKeyword.AND);
             }
             if (!executeNot) {
@@ -83,10 +87,12 @@ public class NormalSegmentList extends AbstractISegmentList {
 
     @Override
     protected String childrenSqlSegment() {
+        /* 删除尾部多余 and 或者 or */
         if (MatchSegment.AND_OR.match(lastValue)) {
             removeAndFlushLast();
         }
         final String str = this.stream().map(ISqlSegment::getSqlSegment).collect(Collectors.joining(SPACE));
+        /* 加上了括号  */
         return (LEFT_BRACKET + str + RIGHT_BRACKET);
     }
 

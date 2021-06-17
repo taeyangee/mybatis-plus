@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 
 /**
  * Created by hcl at 2021/5/14
+ * 基于 jdk SerializedLambda实现的 lambdaMeta
  */
 public class SerializedLambdaMeta implements LambdaMeta {
     private static final Field FIELD_CAPTURING_CLASS;
@@ -25,7 +26,7 @@ public class SerializedLambdaMeta implements LambdaMeta {
     private final SerializedLambda lambda;
 
     public SerializedLambdaMeta(SerializedLambda lambda) {
-        this.lambda = lambda;
+        this.lambda = lambda; /* SerializedLambda[capturingClass=class com.baomidou.mybatisplus.core.conditions.QueryWrapperTest, functionalInterfaceMethod=com/baomidou/mybatisplus/core/toolkit/support/SFunction.apply:(Ljava/lang/Object;)Ljava/lang/Object;, implementation=invokeVirtual com/baomidou/mybatisplus/core/conditions/BaseWrapperTest$Entity.getName:()Ljava/lang/String;, instantiatedMethodType=(Lcom/baomidou/mybatisplus/core/conditions/BaseWrapperTest$Entity;)Ljava/lang/Object;, numCaptured=0] */
     }
 
     @Override
@@ -35,8 +36,8 @@ public class SerializedLambdaMeta implements LambdaMeta {
 
     @Override
     public Class<?> getInstantiatedClass() {
-        String instantiatedMethodType = lambda.getInstantiatedMethodType();
-        String instantiatedType = instantiatedMethodType.substring(2, instantiatedMethodType.indexOf(';')).replace('/', '.');
+        String instantiatedMethodType = lambda.getInstantiatedMethodType(); /* 比如：(Lcom/baomidou/mybatisplus/core/conditions/BaseWrapperTest$Entity;)Ljava/lang/Object; */
+        String instantiatedType = instantiatedMethodType.substring(2, instantiatedMethodType.indexOf(';')).replace('/', '.'); /* 比如： com.baomidou.mybatisplus.core.conditions.BaseWrapperTest$Entity*/
         return ClassUtils.toClassConfident(instantiatedType, getCapturingClass().getClassLoader());
     }
 

@@ -31,15 +31,19 @@ import static java.util.stream.Collectors.joining;
 @SuppressWarnings("serial")
 public class OrderBySegmentList extends AbstractISegmentList {
 
+
     @Override
     protected boolean transformList(List<ISqlSegment> list, ISqlSegment firstSegment, ISqlSegment lastSegment) {
+        /* 保存ISqlSegment列表构成的order子句， 但是去掉了order*/
         list.remove(0);
+        /* 保存的过程中，已经解析了各个ISqlSegment， 每个Seg都重新封装为() -> sql，大概是为了效率*/
         final String sql = list.stream().map(ISqlSegment::getSqlSegment).collect(joining(SPACE));
         list.clear();
         list.add(() -> sql);
         return true;
     }
 
+    /* 取出ISqlSegment列表，在头部添加了ORDER Seg*/
     @Override
     protected String childrenSqlSegment() {
         if (isEmpty()) {

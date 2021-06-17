@@ -29,8 +29,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 /**
- * Lambda 语法使用 Wrapper
- *
+ * 基于 Lambda语法 定位column的wrapper
+ * vs QueryWrapper: LambdaQueryWrapper能更好的做编译检查
+ * vs QueryWrapper：代码上几乎没差别， 只是LambdaQueryWrapper继承的是AbstractLambdaWrapper，而AbstractLambdaWrapper重写了columnToString
  * @author hubin miemie HCL
  * @since 2017-05-26
  */

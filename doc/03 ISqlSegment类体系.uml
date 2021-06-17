@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.baomidou.mybatisplus.core.conditions.ISqlSegment</OriginalElement>
+  <nodes>
+    <node x="76.0" y="80.0">com.baomidou.mybatisplus.core.conditions.AbstractWrapper</node>
+    <node x="172.00000000000006" y="160.0">com.baomidou.mybatisplus.core.conditions.query.QueryWrapper</node>
+    <node x="644.0" y="80.0">com.baomidou.mybatisplus.core.conditions.segments.AbstractISegmentList</node>
+    <node x="0.0" y="160.0">com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper</node>
+    <node x="548.0" y="160.0">com.baomidou.mybatisplus.core.conditions.segments.GroupBySegmentList</node>
+    <node x="336.00000000000006" y="160.0">com.baomidou.mybatisplus.core.conditions.segments.OrderBySegmentList</node>
+    <node x="760.0" y="160.0">com.baomidou.mybatisplus.core.conditions.segments.HavingSegmentList</node>
+    <node x="774.0" y="0.0">com.baomidou.mybatisplus.core.conditions.ISqlSegment</node>
+    <node x="964.0" y="160.0">com.baomidou.mybatisplus.core.conditions.segments.NormalSegmentList</node>
+    <node x="1020.0" y="80.0">com.baomidou.mybatisplus.core.conditions.segments.MergeSegments</node>
+    <node x="872.0" y="80.0">com.baomidou.mybatisplus.core.enums.SqlKeyword</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper" target="com.baomidou.mybatisplus.core.conditions.AbstractWrapper">
+      <point x="0.0" y="-15.0" />
+      <point x="76.0" y="140.0" />
+      <point x="118.0" y="140.0" />
+      <point x="-42.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.conditions.AbstractWrapper" target="com.baomidou.mybatisplus.core.conditions.ISqlSegment">
+      <point x="0.0" y="-15.0" />
+      <point x="160.0" y="50.0" />
+      <point x="791.0" y="50.0" />
+      <point x="-51.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.conditions.query.QueryWrapper" target="com.baomidou.mybatisplus.core.conditions.AbstractWrapper">
+      <point x="0.0" y="-15.0" />
+      <point x="244.00000000000006" y="140.0" />
+      <point x="202.0" y="140.0" />
+      <point x="42.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.conditions.segments.MergeSegments" target="com.baomidou.mybatisplus.core.conditions.ISqlSegment">
+      <point x="0.0" y="-15.0" />
+      <point x="1096.0" y="50.0" />
+      <point x="893.0" y="50.0" />
+      <point x="51.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.conditions.segments.AbstractISegmentList" target="com.baomidou.mybatisplus.core.conditions.ISqlSegment">
+      <point x="0.0" y="-15.0" />
+      <point x="748.0" y="60.0" />
+      <point x="825.0" y="60.0" />
+      <point x="-17.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.conditions.segments.GroupBySegmentList" target="com.baomidou.mybatisplus.core.conditions.segments.AbstractISegmentList">
+      <point x="0.0" y="-15.0" />
+      <point x="644.0" y="140.0" />
+      <point x="722.0" y="140.0" />
+      <point x="-26.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.conditions.segments.HavingSegmentList" target="com.baomidou.mybatisplus.core.conditions.segments.AbstractISegmentList">
+      <point x="0.0" y="-15.0" />
+      <point x="852.0" y="140.0" />
+      <point x="774.0" y="140.0" />
+      <point x="26.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.enums.SqlKeyword" target="com.baomidou.mybatisplus.core.conditions.ISqlSegment">
+      <point x="0.0" y="-15.0" />
+      <point x="936.0" y="60.0" />
+      <point x="859.0" y="60.0" />
+      <point x="17.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.conditions.segments.OrderBySegmentList" target="com.baomidou.mybatisplus.core.conditions.segments.AbstractISegmentList">
+      <point x="0.0" y="-15.0" />
+      <point x="432.00000000000006" y="130.0" />
+      <point x="670.0" y="130.0" />
+      <point x="-78.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.conditions.segments.NormalSegmentList" target="com.baomidou.mybatisplus.core.conditions.segments.AbstractISegmentList">
+      <point x="5.6843418860808015E-14" y="-15.0" />
+      <point x="1056.0" y="130.0" />
+      <point x="826.0" y="130.0" />
+      <point x="78.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="574.0" y="166.5" />
+  <SelectedNodes>
+    <node>com.baomidou.mybatisplus.core.conditions.segments.MergeSegments</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -18,6 +18,7 @@ package com.baomidou.mybatisplus.core.conditions.update;
 import java.io.Serializable;
 
 /**
+ * updateWrapper、LambdaUpdateWrapper实现该接口， 用于构造set sql seg
  * @author miemie
  * @since 2018-12-12
  */

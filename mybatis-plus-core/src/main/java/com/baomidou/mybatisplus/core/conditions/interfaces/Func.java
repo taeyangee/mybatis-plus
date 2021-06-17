@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 /**
  * 查询条件封装
- *
+ * 主要是封装了一些SQL函数
  * @author hubin miemie HCL
  * @since 2017-05-26
  */

@@ -33,10 +33,12 @@ public class GroupBySegmentList extends AbstractISegmentList {
 
     @Override
     protected boolean transformList(List<ISqlSegment> list, ISqlSegment firstSegment, ISqlSegment lastSegment) {
+        /* 把group砍掉，剩下的存起来*/
         list.remove(0);
         return true;
     }
 
+    /* 取出ISqlSegment列表，在头部添加了GROUP_BY Seg*/
     @Override
     protected String childrenSqlSegment() {
         if (isEmpty()) {

@@ -21,6 +21,11 @@ import java.io.Serializable;
 import java.util.function.Predicate;
 
 /**
+ * select语法的定义
+ * - 重载了几种select满足不同需求
+ * - QueryWrapper/LambdaQueryWrapper实现了改接口
+ *
+ *
  * @author miemie
  * @since 2018-12-12
  */

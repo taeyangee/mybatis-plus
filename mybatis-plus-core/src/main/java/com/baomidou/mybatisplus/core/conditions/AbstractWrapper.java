@@ -42,8 +42,15 @@ import static java.util.stream.Collectors.joining;
 /**
  * 查询条件封装
  * @param <T> 实体类
- * @param <R> 实体类中的某个字段
- * @param <Children> 限制了只能同构的是 AbstractWrapper<T, R, Children>
+ * @param <R> 实体类中的字段信息的提取形式：QueryWrapper使用String， LambdaQuery使用SFuntion
+ * @param <Children> 限制了只能同构的是 AbstractWrapper<T, R, Children>， 其实就是typedThis
+ *
+ * - 继承了 Wrapper
+ * - 实现了 conditions.interfaces中的各种查询接口：
+ *  - addCondition + appendSqlSegments: 常规拼接
+ *  - addNestedCondition + appendSqlSegments： 嵌套拼接
+ *  - likeValue + appendSqlSegments ：只是多了SqlUtils.concatLike(val, sqlLike)
+ *  - appendSqlSegments:就是在调用MergeSegments#add方法
  *
  * @author hubin miemie HCL
  * @since 2017-05-26
@@ -53,19 +60,21 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
     implements Compare<Children, R>, Nested<Children, Children>, Join<Children>, Func<Children, R> {
 
     /**
-     * 占位符
+     * 占位符:用来实现链式调用
      */
     protected final Children typedThis = (Children) this;
     /**
      * 必要度量
      */
     protected AtomicInteger paramNameSeq;
+    /*TODO:管理了查询条件的参数kv，后续mb生成sqlsource的时候应该会用上*/
     protected Map<String, Object> paramNameValuePairs;
+
     /**
      * 其他
      */
     protected SharedString paramAlias;
-    protected SharedString lastSql;
+    protected SharedString lastSql; /*配合wrapper#last方法使用*/
     /**
      * SQL注释
      */
@@ -78,6 +87,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
      * 数据库表映射实体类
      */
     private T entity;
+    /** segs管理 */
     protected MergeSegments expression;
     /**
      * 实体类型(主要用于确定泛型以及取TableInfo缓存)
@@ -209,6 +219,8 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
         return and(condition).addNestedCondition(condition, consumer);
     }
 
+    /* or的嵌套用法，声明在Nested接口*/
+    /* 例: or(i -> i.eq("name", "李白").ne("status", "活着"))--->or (name = '李白' and status <> '活着') */
     @Override
     public Children or(boolean condition, Consumer<Children> consumer) {
         return or(condition).addNestedCondition(condition, consumer);
@@ -224,6 +236,8 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
         return not(condition).addNestedCondition(condition, consumer);
     }
 
+    /* or的拼接用法，声明与Join接口*/
+    /* 例: eq("id",1).or().eq("name","老王")--->id = 1 or name = '老王' */
     @Override
     public Children or(boolean condition) {
         return maybeDo(condition, () -> appendSqlSegments(OR));
@@ -328,6 +342,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
     public Children orderBy(boolean condition, boolean isAsc, R column, R... columns) {
         return maybeDo(condition, () -> {
             final SqlKeyword mode = isAsc ? ASC : DESC;
+            /* 这里可能order by子句， 生成的时候解决了语法问题 ==》 见MergeSegments#add*/
             appendSqlSegments(ORDER_BY, columnToSqlSegment(column), mode);
             if (ArrayUtils.isNotEmpty(columns)) {
                 Arrays.stream(columns).forEach(c -> appendSqlSegments(ORDER_BY,
@@ -346,6 +361,12 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
         return column;
     }
 
+    /*
+    * formatSqlMaybeWithParam
+    * 例: having("sum(age) > 10")--->having sum(age) > 10
+    * 例: having("sum(age) > {0}", 11)--->having sum(age) > 11
+    *
+    * */
     @Override
     public Children having(boolean condition, String sqlHaving, Object... params) {
         return maybeDo(condition, () -> appendSqlSegments(HAVING,
@@ -373,6 +394,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
         return maybeDo(condition, () -> appendSqlSegments(AND));
     }
 
+
     /**
      * 内部自用
      * <p>拼接 LIKE 以及 值</p>
@@ -391,19 +413,26 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
      * @param val        条件值
      */
     protected Children addCondition(boolean condition, R column, SqlKeyword sqlKeyword, Object val) {
+        /*
+        * maybeDo做条件判定=》调用appendSqlSegments=》返回typedThis，实现链式，所以children实际上自己
+        * appendSqlSegments将 colum/keyword/val 作为seg推送到 MergeSegments中，
+        * */
         return maybeDo(condition, () -> appendSqlSegments(columnToSqlSegment(column), sqlKeyword,
             () -> formatParam(null, val)));
     }
 
     /**
      * 多重嵌套查询条件
-     *
+     * 就是生成（）包括一下，例: nested(i -> i.eq("name", "李白").ne("status", "活着"))--->(name = '李白' and status <> '活着')
+     * TODO:没看到（）？
      * @param condition 查询条件值
      */
     protected Children addNestedCondition(boolean condition, Consumer<Children> consumer) {
         return maybeDo(condition, () -> {
-            final Children instance = instance();
+            final Children instance = instance(); /* 一个新的对象， 继承了Children parent的属性*/
             consumer.accept(instance);
+            /* 整个新生成的wrapper作为seg被保存在父wrapper的megerSeg中*/
+            /* APPLY，是有标识作用 ，没有实际seg编辑动作 */
             appendSqlSegments(APPLY, instance);
         });
     }
@@ -422,6 +451,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
      * @param mapping 例如: "javaType=int,jdbcType=NUMERIC,typeHandler=xxx.xxx.MyTypeHandler" 这种
      * @param params  参数
      * @return sql片段
+     * 用法：看看Having
      */
     protected final String formatSqlMaybeWithParam(String sqlStr, String mapping, Object... params) {
         if (StringUtils.isBlank(sqlStr)) {
@@ -448,7 +478,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
         final String genParamName = Constants.WRAPPER_PARAM + paramNameSeq.incrementAndGet();
         final String paramStr = getParamAlias() + Constants.WRAPPER_PARAM_MIDDLE + genParamName;
         paramNameValuePairs.put(genParamName, param);
-        return SqlScriptUtils.safeParam(paramStr, mapping);
+        return SqlScriptUtils.safeParam(paramStr, mapping); /* mb的#{}形式进行拼接*/
     }
 
     /**
@@ -523,6 +553,10 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
         expression.add(sqlSegments);
     }
 
+    /*
+    * (xxx = #{ew.paramNameValuePairs.MPGENVAL1} AND (andx = #{ew.paramNameValuePairs.MPGENVAL2} AND ande <= #{ew.paramNameValuePairs.MPGENVAL3}) AND xxx <> #{ew.paramNameValuePairs.MPGENVAL4})
+    *
+    * */
     @Override
     public String getSqlSegment() {
         return expression.getSqlSegment() + lastSql.getStringValue();
@@ -573,6 +607,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
 
     /**
      * 获取 columnName
+     *
      */
     protected final ISqlSegment columnToSqlSegment(R column) {
         return () -> columnToString(column);
@@ -580,6 +615,7 @@ public abstract class AbstractWrapper<T, R, Children extends AbstractWrapper<T, 
 
     /**
      * 获取 columnName
+     * AbstractLambdaWrapper重载了columnsToString，使用SFunction完成column解析
      */
     protected String columnToString(R column) {
         return (String) column;

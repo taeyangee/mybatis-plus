@@ -15,5 +15,10 @@
  */
 /**
  * 条件构造区域，测试是否可以提交
+ *
+ *
+ * AbstractWrapper类：是整个condition模块的用户接口
+ * ISqlSegment： 可以理解为AbstractWrapper管理了一堆ISqlSegment
+ *
  */
 package com.baomidou.mybatisplus.core.conditions;
