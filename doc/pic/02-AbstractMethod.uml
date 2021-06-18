@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.baomidou.mybatisplus.core.injector.AbstractMethod</OriginalElement>
+  <nodes>
+    <node x="0.0" y="250.0">com.baomidou.mybatisplus.extension.injector.methods.Upsert</node>
+    <node x="380.0" y="250.0">com.baomidou.mybatisplus.core.injector.methods.Update</node>
+    <node x="644.0" y="250.0">com.baomidou.mybatisplus.core.injector.methods.Insert</node>
+    <node x="219.99999999999997" y="0.0">com.baomidou.mybatisplus.core.toolkit.StringPool</node>
+    <node x="282.0" y="160.0">com.baomidou.mybatisplus.core.injector.AbstractMethod</node>
+    <node x="116.0" y="250.0">com.baomidou.mybatisplus.core.injector.methods.Delete</node>
+    <node x="232.0" y="250.0">com.baomidou.mybatisplus.core.injector.methods.SelectById</node>
+    <node x="302.0" y="80.0">com.baomidou.mybatisplus.core.toolkit.Constants</node>
+    <node x="496.0" y="250.0">com.baomidou.mybatisplus.core.injector.methods.DeleteById</node>
+    <node x="368.0" y="0.0">java.io.Serializable</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.baomidou.mybatisplus.core.injector.methods.Delete" target="com.baomidou.mybatisplus.core.injector.AbstractMethod">
+      <point x="0.0" y="-15.0" />
+      <point x="164.0" y="220.0" />
+      <point x="322.0" y="220.0" />
+      <point x="-40.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.injector.methods.DeleteById" target="com.baomidou.mybatisplus.core.injector.AbstractMethod">
+      <point x="0.0" y="-15.0" />
+      <point x="560.0" y="220.0" />
+      <point x="402.0" y="220.0" />
+      <point x="40.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.injector.AbstractMethod" target="com.baomidou.mybatisplus.core.toolkit.Constants">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.toolkit.Constants" target="java.io.Serializable">
+      <point x="30.0" y="-15.0" />
+      <point x="392.0" y="55.0" />
+      <point x="440.0" y="55.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.injector.methods.SelectById" target="com.baomidou.mybatisplus.core.injector.AbstractMethod">
+      <point x="0.0" y="-15.0" />
+      <point x="296.0" y="230.0" />
+      <point x="348.66666666666663" y="230.0" />
+      <point x="-13.333333333333314" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.injector.methods.Insert" target="com.baomidou.mybatisplus.core.injector.AbstractMethod">
+      <point x="0.0" y="-15.0" />
+      <point x="692.0" y="210.0" />
+      <point x="428.66666666666663" y="210.0" />
+      <point x="66.66666666666669" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.injector.methods.Update" target="com.baomidou.mybatisplus.core.injector.AbstractMethod">
+      <point x="0.0" y="-15.0" />
+      <point x="428.0" y="230.0" />
+      <point x="375.33333333333337" y="230.0" />
+      <point x="13.333333333333371" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.extension.injector.methods.Upsert" target="com.baomidou.mybatisplus.core.injector.AbstractMethod">
+      <point x="0.0" y="-15.0" />
+      <point x="48.0" y="210.0" />
+      <point x="295.33333333333326" y="210.0" />
+      <point x="-66.66666666666669" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.toolkit.Constants" target="com.baomidou.mybatisplus.core.toolkit.StringPool">
+      <point x="-30.0" y="-15.0" />
+      <point x="332.0" y="55.0" />
+      <point x="284.0" y="55.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="370.0" y="140.0" />
+  <SelectedNodes>
+    <node>com.baomidou.mybatisplus.core.injector.AbstractMethod</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

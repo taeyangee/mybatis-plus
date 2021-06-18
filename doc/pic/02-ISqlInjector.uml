@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.baomidou.mybatisplus.core.injector.ISqlInjector</OriginalElement>
+  <nodes>
+    <node x="0.0" y="80.0">com.baomidou.mybatisplus.core.injector.AbstractSqlInjector</node>
+    <node x="28.0" y="0.0">com.baomidou.mybatisplus.core.injector.ISqlInjector</node>
+    <node x="4.0" y="160.0">com.baomidou.mybatisplus.core.injector.DefaultSqlInjector</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.baomidou.mybatisplus.core.injector.AbstractSqlInjector" target="com.baomidou.mybatisplus.core.injector.ISqlInjector">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.baomidou.mybatisplus.core.injector.DefaultSqlInjector" target="com.baomidou.mybatisplus.core.injector.AbstractSqlInjector">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="100.0" y="95.0" />
+  <SelectedNodes>
+    <node>com.baomidou.mybatisplus.core.injector.ISqlInjector</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

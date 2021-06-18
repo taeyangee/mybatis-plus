@@ -26,8 +26,9 @@ import java.util.Objects;
 
 /**
  * 条件构造抽象类
- * -定义对MergeSegments的判定方法，要求子类要提供MergeSegments
- * -定义 getSqlXXX，更像是给测试用的
+ * - 定义对MergeSegments的判定方法，要求子类要提供MergeSegments
+ * - 定义 getSqlXXX，更像是给测试用的
+ * - 实现了ISqlSegment接口： 复杂条件的构造是通过组合模式、解释器模式实现的， Wrapper实现ISqlSegment是组合模式实现的基础
  * @author hubin
  * @since 2018-05-25
  */

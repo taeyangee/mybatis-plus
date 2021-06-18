@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * SQL 片段集合 处理的抽象类
+ * SQL片段集合处理的抽象类
  * 实现了ISqlSegment接口，同时也是 ISqlSegment容器
  * @author miemie
  * @since 2018-06-27

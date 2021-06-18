@@ -17,4 +17,6 @@
 - 代码路径：MybatisMapperAnnotationBuilder#parse -> #parseStatement
 ## BaseMapper接口中的默认方法
 - 功能实现：MybatisMapperAnnotationBuilder-> SqlInjector-> 各种AbstractMethod子类，完成了默认方法到MapperStatment的绑定
-- 细节：每个AbstractMethod子类 对应 BaseMapper中的一个方法
+- 相关类
+    - [AbstractMethod体系](pic/02AbstractMethod.uml)： 每个AbstractMethod子类 对应 BaseMapper中的一个方法对应BaseMapper中的一个方法
+    - [ISqlInjector体系](pic/02ISqlInjector.uml)： 像mb注入MappedStatement
